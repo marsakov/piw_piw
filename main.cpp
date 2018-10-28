@@ -17,20 +17,20 @@
 
 int checkCoord(Bullet & bullet, Player & player) {
 	for (unsigned int i = 0; i < Bullet::bulletPoolSize && Bullet::bulletPool[i]; i++) {
-		if (Bullet::bulletPool[i] != &bullet && Bullet::bulletPool[i]->getHealth() != 0 && Bullet::bulletPool[i]->getPos().getX() == bullet.getPos().getX() && Bullet::bulletPool[i]->getPos().getY() == bullet.getPos().getY()) {
+		if (Bullet::bulletPool[i] != &bullet && Bullet::bulletPool[i]->getHealth() != 0 && Bullet::bulletPool[i]->getX() == bullet.getX() && Bullet::bulletPool[i]->getY() == bullet.getY()) {
 			Bullet::bulletPool[i]->takeDamage(bullet.getDamage());
 			bullet.takeDamage(100);
 			return (0);
 		}
 	}
 	for (unsigned int i = 0; i < Enemy::warriorPoolSize && Enemy::warriorPool[i]; i++) {
-		if (Enemy::warriorPool[i]->getHealth() != 0 && Enemy::warriorPool[i]->getPos().getX() == bullet.getPos().getX() && Enemy::warriorPool[i]->getPos().getY() == bullet.getPos().getY()) {
+		if (Enemy::warriorPool[i]->getHealth() != 0 && (Enemy::warriorPool[i]->getX() == bullet.getX() || Enemy::warriorPool[i]->getX() + 1 == bullet.getX()|| Enemy::warriorPool[i]->getX() + 2 == bullet.getX() || Enemy::warriorPool[i]->getX() + 3 == bullet.getX() || Enemy::warriorPool[i]->getX() + 4 == bullet.getX()) && Enemy::warriorPool[i]->getY() == bullet.getY()) {
 			Enemy::warriorPool[i]->takeDamage(bullet.getDamage());
 			bullet.takeDamage(100);
 			return (0);
 		}
 	}
-	if (player.getHealth() != 0 && player.getPos().getX() == bullet.getPos().getX() && player.getPos().getY() == bullet.getPos().getY()) {
+	if (player.getHealth() != 0 && (player.getX() == bullet.getX() || player.getX() + 1 == bullet.getX() || player.getX() + 2 == bullet.getX() || player.getX() + 3 == bullet.getX() || player.getX() + 4 == bullet.getX()) && player.getY() == bullet.getY()) {
 		player.takeDamage(bullet.getDamage());
 		bullet.takeDamage(100);
 	}
@@ -40,28 +40,23 @@ int checkCoord(Bullet & bullet, Player & player) {
 void	movePlayerMove(Player &player)
 {
 	int	c;
-	Coordinate cord;
 
 	if ((c = getch()) != 'q')
 	{
 		if (c == KEY_LEFT)
 		{
-			cord = player.getPos();
-			if (cord.getX() > 0)
+			if (player.getX() > 0)
 			{
-				cord.setX(cord.getX() - 1);
 				player.clear();
-				player.setPos(cord);
+				player.setPos(player.getX() - 1, player.getY());
 			}
 		}
 		if (c == KEY_RIGHT)
 		{
-			cord = player.getPos();
-			if (cord.getX() < COLS - 1)
+			if (player.getX() < COLS - 1)
 			{
-				cord.setX(cord.getX() + 1);
 				player.clear();
-				player.setPos(cord);
+				player.setPos(player.getX() + 1, player.getY());
 			}
 		}
 		if (c == 32)
@@ -92,21 +87,21 @@ void	moveBullets(Enemy enemy, int eRows, int eCols)
 int 	moveAll(Enemy enemy, int &directionVector, int eCols, int eRows) {
 
 	mvprintw(LINES - 5, 0, "                                ");
-	if (directionVector == -1 && enemy.warriorPool[0] && enemy.warriorPool[0]->getPos().getX() - 1 == -1) {
+	if (directionVector == -1 && enemy.warriorPool[0] && enemy.warriorPool[0]->getX() - 1 == -1) {
 		directionVector = 1;
 		for (int i = 0; i < eCols * eRows; i++) {
 			enemy.warriorPool[i]->clear();
-			if (!enemy.warriorPool[i]->move(enemy.warriorPool[i]->getPos().getX() + directionVector, enemy.warriorPool[i]->getPos().getY() + 1))
+			if (!enemy.warriorPool[i]->setPos(enemy.warriorPool[i]->getX() + directionVector, enemy.warriorPool[i]->getY() + 1))
 				return (0);
 			if (enemy.warriorPool[i]->isAlive())
 				enemy.warriorPool[i]->drawEntity();
 		}
 	}
-	else if (directionVector == 1 && enemy.warriorPool[eCols - 1]->getPos().getX() + 1 == COLS) {
+	else if (directionVector == 1 && enemy.warriorPool[eCols - 1]->getX() + 1 == COLS) {
 		directionVector = -1;
 		for (int i = 0; i < eCols * eRows; i++) {
 			enemy.warriorPool[i]->clear();
-			if (!enemy.warriorPool[i]->move(enemy.warriorPool[i]->getPos().getX() + directionVector, enemy.warriorPool[i]->getPos().getY() + 1))
+			if (!enemy.warriorPool[i]->setPos(enemy.warriorPool[i]->getX() + directionVector, enemy.warriorPool[i]->getY() + 1))
 				return (0);
 			if (enemy.warriorPool[i]->isAlive())
 				enemy.warriorPool[i]->drawEntity();
@@ -115,7 +110,7 @@ int 	moveAll(Enemy enemy, int &directionVector, int eCols, int eRows) {
 	else {
 		for (int i = 0; i < eCols * eRows; i++) {
 			enemy.warriorPool[i]->clear();
-			if (!enemy.warriorPool[i]->move(enemy.warriorPool[i]->getPos().getX() + directionVector, enemy.warriorPool[i]->getPos().getY()))
+			if (!enemy.warriorPool[i]->setPos(enemy.warriorPool[i]->getX() + directionVector, enemy.warriorPool[i]->getY()))
 				return (0);
 			if (enemy.warriorPool[i]->isAlive())
 				enemy.warriorPool[i]->drawEntity();
@@ -124,16 +119,12 @@ int 	moveAll(Enemy enemy, int &directionVector, int eCols, int eRows) {
 
 	for (unsigned int i = 0; Bullet::bulletPool[i] && i < Bullet::bulletPoolSize; i++)
 	{
-		Coordinate cord;
-
-		cord = Bullet::bulletPool[i]->getPos();
 		Bullet::bulletPool[i]->clear();
 		if (Bullet::bulletPool[i]->getPvsE())
-			cord.setY(cord.getY() + 1);
+			Bullet::bulletPool[i]->setY(Bullet::bulletPool[i]->getY() + 1);
 		else
-			cord.setY(cord.getY() - 1);
-		Bullet::bulletPool[i]->move(cord);
-		if (cord.getY() < 0 || cord.getY() > LINES - 1)
+			Bullet::bulletPool[i]->setY(Bullet::bulletPool[i]->getY() - 1);
+		if (Bullet::bulletPool[i]->getY() < 0 || Bullet::bulletPool[i]->getY() > LINES - 1)
 			Bullet::bulletPool[i]->takeDamage(100);
 		if (Bullet::bulletPool[i]->isAlive())
 			Bullet::bulletPool[i]->drawEntity();

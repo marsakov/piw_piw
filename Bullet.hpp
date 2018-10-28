@@ -28,7 +28,7 @@ public:
 	int getDamage();
 	int getPvsE();
 	void	drawEntity();
-	void	move(Coordinate &cord);
+	// void	move(Coordinate &cord);
 	Bullet & operator=(Bullet const & bullet);
 
 	static const unsigned int	bulletPoolSize;

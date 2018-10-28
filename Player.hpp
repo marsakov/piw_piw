@@ -17,6 +17,7 @@ public:
 	Player & operator=(Player const & player);
 
 	void move(int x, int y);
+	void clear(void) const;
 	void shoot(void);
 	void drawEntity(void);
 

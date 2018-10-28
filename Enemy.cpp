@@ -17,13 +17,13 @@ Enemy::Enemy(void) : _rightChap(0), _leftChap(0) {
 }
 
 Enemy::Enemy(int x, int y, int damage) : _rightChap(0), _leftChap(0) {
-	setPos(Coordinate(x, y));
+	setPos(x, y);
 	_damage = damage;
 }
 
 Enemy::Enemy(Enemy const & enemy)
 {
-	setPos(Coordinate(enemy.getPos().getX(), enemy.getPos().getY()));
+	setPos(enemy.getX(), enemy.getY());
 }
 
 Enemy::~Enemy() {
@@ -32,15 +32,20 @@ Enemy::~Enemy() {
 
 int Enemy::move(int x, int y) {
 	if (x <= COLS && x >= 0 && y <= LINES - 2 && y >= 0) {
-		setPos(Coordinate(x, y));
+		setPos(x, y);
 		return (1);
 	}
 	return (0);
 }
 
+void Enemy::clear(void) const
+{
+	mvprintw(_y, _x, "     \n");
+}
+
 void Enemy::shoot(void) {
 	char c;
-	Bullet* b = new Bullet(getPos().getX(), getPos().getY() + 1, _damage, 1);
+	Bullet* b = new Bullet(_x, _y + 1, _damage, 1);
 
 	if (!b->addToBulletPool())
 	{
@@ -56,7 +61,7 @@ void Enemy::shoot(void) {
 
 void Enemy::drawEntity()
 {
-	mvprintw(getPos().getY(), getPos().getX(), "V");
+	mvprintw(_y, _x, "[o.o]\n");
 }
 
 int		Enemy::isRightChap(void) const {
@@ -78,7 +83,7 @@ void	Enemy::setLeftChap(void) {
 int		Enemy::addToWarriorPool(Enemy *entity)
 {
 	unsigned int	cnt;
-	Enemy		*cur;
+	Enemy			*cur;
 
 	cnt = 0;
 	for (unsigned int i = 0; i < warriorPoolSize; ++i)
@@ -99,7 +104,7 @@ int		Enemy::addToWarriorPool(Enemy *entity)
 Enemy &	Enemy::operator=(Enemy const &enemy) {
 	if (this != &enemy)
 	{
-		setPos(Coordinate(enemy.getPos().getX(), enemy.getPos().getY()));
+		setPos(enemy.getX(), enemy.getY());
 	}
 	return (*this);
 }

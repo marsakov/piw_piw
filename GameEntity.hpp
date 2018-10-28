@@ -26,8 +26,11 @@ class GameEntity
 		GameEntity(GameEntity const &ent);
 		~GameEntity(void);
 
-		void			setPos(Coordinate const &cord);
-		Coordinate		getPos(void) const;
+		int				setPos(int x, int y);
+		void			setX(int x);
+		void			setY(int y);
+		int				getX(void) const;
+		int				getY(void) const;
 		virtual void	drawEntity(void);
 		void			clear(void) const;
 		void			takeDamage(unsigned int amount);
@@ -38,7 +41,8 @@ class GameEntity
 		GameEntity		&operator=(GameEntity const &ent);
 
 	protected:
-		Coordinate					_pos;
+		int							_x;
+		int							_y;
 		unsigned int				_health;
 		unsigned int				_lives;
 		

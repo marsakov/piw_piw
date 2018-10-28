@@ -29,6 +29,7 @@ class Enemy : public GameEntity
 		void	setLeftChap();
 		void	shoot(void);
 		void	drawEntity();
+		void	clear(void) const;
 		int		isRightChap(void) const;
 		int		isLeftChap(void) const;
 

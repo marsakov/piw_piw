@@ -13,13 +13,13 @@
 #include "Player.hpp"
 
 Player::Player(int x, int y, int damage) {
-	setPos(Coordinate(x, y));
+	setPos(x, y);
 	_damage = damage;
 }
 
 Player::Player(Player const & player)
 {
-	setPos(Coordinate(player.getPos().getX(), player.getPos().getY()));
+	setPos(player.getX(), player.getY());
 }
 
 Player::~Player() {
@@ -28,13 +28,13 @@ Player::~Player() {
 
 void Player::move(int x, int y) {
 	if (x <= COLS && x >= 0) {
-		setPos(Coordinate(x, getPos().getY()));
+		setPos(x, _y);
 	}
 	y++;
 }
 
 void Player::shoot(void) {
-	Bullet* b = new Bullet(getPos().getX(), getPos().getY() - 1, _damage, 0);
+	Bullet* b = new Bullet(_x, _y - 1, _damage, 0);
 
 	if (!b->addToBulletPool())
 	{
@@ -44,13 +44,18 @@ void Player::shoot(void) {
 }
 
 void	Player::drawEntity(void) {
-	mvprintw(getPos().getY(), getPos().getX(), "X");
+	mvprintw(_y, _x, "}*.*{");
+}
+
+void	Player::clear(void) const
+{
+	mvprintw(_y, _x, "     \n");
 }
 
 Player & Player::operator=(Player const &player) {
 	if (this != &player)
 	{
-		setPos(Coordinate(player.getPos().getX(), player.getPos().getY()));
+		setPos(player.getX(), player.getY());
 	}
 	return (*this);
 }

@@ -13,7 +13,7 @@
 #include "GameEntity.hpp"
 
 GameEntity::GameEntity(void) :
-	_pos(0, 0), _health(100), _lives(0)
+	_x(0), _y(0), _health(100), _lives(0)
 {
 }
 
@@ -32,14 +32,15 @@ void GameEntity::drawEntity()
 
 void GameEntity::clear(void) const
 {
-	mvprintw(_pos.getY(), _pos.getX(), " ");
+	mvprintw(_y, _x, " ");
 }
 
 GameEntity	&GameEntity::operator=(GameEntity const &ent)
 {
 	if (this != &ent)
 	{
-		_pos = ent._pos;
+		_x = ent._x;
+		_y = ent._y;
 		_lives = 0;
 		_health = 0;
 	}
@@ -51,9 +52,25 @@ int			GameEntity::getHealth(void) const
 	return (_health);
 }
 
-void		GameEntity::setPos(Coordinate const &cord)
+int			GameEntity::setPos(int x, int y)
 {
-	_pos = cord;
+	if (x <= COLS && x >= 0 && y <= LINES - 1 && y >= 0) {
+		_x = x;
+		_y = y;
+		return (1);
+	}
+	else
+		return (0);
+}
+
+void		GameEntity::setX(int x)
+{
+	_x = x;
+}
+
+void		GameEntity::setY(int y)
+{
+	_y = y;
 }
 
 void		GameEntity::takeDamage(unsigned int amount){
@@ -63,9 +80,14 @@ void		GameEntity::takeDamage(unsigned int amount){
 		_health -= amount;
 }
 
-Coordinate	GameEntity::getPos(void) const
+int			GameEntity::getX(void) const
 {
-	return (_pos);
+	return (_x);
+}
+
+int			GameEntity::getY(void) const
+{
+	return (_y);
 }
 
 int		GameEntity::isAlive(void) const

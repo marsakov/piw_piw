@@ -13,14 +13,14 @@
 #include "Bullet.hpp"
 
 Bullet::Bullet(int x, int y, int damage, int pVSe) {
-	setPos(Coordinate(x, y));
+	setPos(x, y);
 	_damage = damage;
 	_pVSe = pVSe;
 }
 
 Bullet::Bullet(Bullet const & bullet)
 {
-	setPos(Coordinate(bullet.getPos().getX(), bullet.getPos().getY()));
+	setPos(bullet.getX(), bullet.getY());
 }
 
 Bullet::~Bullet() {
@@ -28,7 +28,7 @@ Bullet::~Bullet() {
 }
 
 void Bullet::drawEntity() {
-	mvprintw(getPos().getY(), getPos().getX(), "*");
+	mvprintw(getY(), getX(), "*");
 }
 
 int		Bullet::getDamage()
@@ -62,15 +62,15 @@ int		Bullet::addToBulletPool()
 	return (1);
 }
 
-void	Bullet::move(Coordinate &cord)
-{
-	_pos = cord;
-}
+// void	Bullet::move(Coordinate &cord)
+// {
+// 	_pos = cord;
+// }
 
 Bullet & Bullet::operator=(Bullet const &bullet) {
 	if (this != &bullet)
 	{
-		setPos(Coordinate(bullet.getPos().getX(), bullet.getPos().getY()));
+		setPos(bullet.getX(), bullet.getY());
 	}
 	return (*this);
 }
