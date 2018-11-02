@@ -17,20 +17,37 @@
 
 int checkCoord(Bullet & bullet, Player & player) {
 	for (unsigned int i = 0; i < Bullet::bulletPoolSize && Bullet::bulletPool[i]; i++) {
-		if (Bullet::bulletPool[i] != &bullet && Bullet::bulletPool[i]->getHealth() != 0 && Bullet::bulletPool[i]->getX() == bullet.getX() && Bullet::bulletPool[i]->getY() == bullet.getY()) {
+		if (Bullet::bulletPool[i] != &bullet &&
+		 Bullet::bulletPool[i]->getHealth() != 0 &&
+		  Bullet::bulletPool[i]->getX() == bullet.getX() &&
+		   Bullet::bulletPool[i]->getY() == bullet.getY()) 
+		{
 			Bullet::bulletPool[i]->takeDamage(bullet.getDamage());
 			bullet.takeDamage(100);
 			return (0);
 		}
 	}
 	for (unsigned int i = 0; i < Enemy::warriorPoolSize && Enemy::warriorPool[i]; i++) {
-		if (Enemy::warriorPool[i]->getHealth() != 0 && (Enemy::warriorPool[i]->getX() == bullet.getX() || Enemy::warriorPool[i]->getX() + 1 == bullet.getX()|| Enemy::warriorPool[i]->getX() + 2 == bullet.getX() || Enemy::warriorPool[i]->getX() + 3 == bullet.getX() || Enemy::warriorPool[i]->getX() + 4 == bullet.getX()) && Enemy::warriorPool[i]->getY() == bullet.getY()) {
+		if (Enemy::warriorPool[i]->getHealth() != 0 &&
+		 (Enemy::warriorPool[i]->getX() == bullet.getX() 
+		 	|| Enemy::warriorPool[i]->getX() + 1 == bullet.getX()
+		 	|| Enemy::warriorPool[i]->getX() + 2 == bullet.getX()
+		 	|| Enemy::warriorPool[i]->getX() + 3 == bullet.getX() 
+		 	|| Enemy::warriorPool[i]->getX() + 4 == bullet.getX())
+		 && Enemy::warriorPool[i]->getY() == bullet.getY())
+		{
 			Enemy::warriorPool[i]->takeDamage(bullet.getDamage());
 			bullet.takeDamage(100);
 			return (0);
 		}
 	}
-	if (player.getHealth() != 0 && (player.getX() == bullet.getX() || player.getX() + 1 == bullet.getX() || player.getX() + 2 == bullet.getX() || player.getX() + 3 == bullet.getX() || player.getX() + 4 == bullet.getX()) && player.getY() == bullet.getY()) {
+	if (player.getHealth() != 0 && (player.getX() == bullet.getX() 
+		|| player.getX() + 1 == bullet.getX() 
+		|| player.getX() + 2 == bullet.getX() 
+		|| player.getX() + 3 == bullet.getX() 
+		|| player.getX() + 4 == bullet.getX()) 
+		&& player.getY() == bullet.getY()) 
+	{
 		player.takeDamage(bullet.getDamage());
 		bullet.takeDamage(100);
 	}
@@ -70,7 +87,6 @@ void	moveBullets(Enemy enemy, int eRows, int eCols)
 {
 	for (int i = 0; i < eRows; ++i) {
 		for (int j = 0; j < eCols; ++j) {
-			/*       shoot       */
 			for (int k = 1; k <= eRows - i; k++) {
 				if ((i * eCols + j) + k * eCols < eCols * eRows && enemy.warriorPool[(i * eCols + j) + k * eCols]->isAlive()) {
 					break;
@@ -78,7 +94,6 @@ void	moveBullets(Enemy enemy, int eRows, int eCols)
 				if (k == eRows - i && enemy.warriorPool[(i * eCols + j)]->isAlive())
 					enemy.warriorPool[(i * eCols + j)]->shoot();
 			}
-			/*********************/
 		}
 	}
 }
@@ -142,12 +157,20 @@ int		allAlive() {
 	return (result);
 }
 
-int		main(void)
-{
-	int	eCols;
-	int eRows;
+void	init(int *eCols, int *eRows, Enemy *enemy) {
 
 	initscr();
+	if(has_colors() == FALSE)
+	{	endwin();
+		printf("Your terminal does not support color\n");
+		exit(1);
+	}
+	start_color();
+	init_pair(4, COLOR_BLACK, COLOR_RED);
+	init_pair(1, COLOR_BLACK, COLOR_GREEN);
+	init_pair(2, COLOR_MAGENTA, COLOR_BLACK);
+	init_pair(3, COLOR_YELLOW, COLOR_BLACK);
+
 	cbreak();
 	nodelay(stdscr, true);
 
@@ -155,7 +178,9 @@ int		main(void)
 	curs_set(0);
 	refresh();
 
+	attron(COLOR_PAIR(1));
 	mvprintw(LINES / 2, COLS / 2 - 10, "Press [ENTER] to start game");
+	attroff(COLOR_PAIR(2));
 	char c = 0;
 	while (c != '\n')
 		c = getch();
@@ -163,39 +188,53 @@ int		main(void)
 
 	nodelay(stdscr, true);
 
-	double duration;
-	std::clock_t start = std::clock();
+	if (COLS % 2 == 0)
+		*eCols = COLS * 3 / 43 - 1;
+	else
+		*eCols = COLS * 3 / 43;
+
+	if ((LINES / 2) % 2 == 0)
+		*eRows = LINES / 8 - 1;
+	else
+		*eRows = LINES / 8;
+
+	for (int i = 0; i < *eRows; ++i)
+	{
+		for (int j = 0; j < *eCols; ++j)
+		{
+			enemy->addToWarriorPool(new Enemy(10 * (j + 1), 4 * (i + 1), 100));
+			if (j == 1)
+				enemy->warriorPool[i * *eCols + j]->setLeftChap();
+			if (j == *eCols)
+				enemy->warriorPool[i * *eCols + j]->setRightChap();
+		}
+	}
+}
+
+
+
+int		main(void) {
+	int	eCols;
+	int eRows;
 	Enemy enemy;
-	Player* player = new Player(COLS / 2, LINES - 1, 100);
+	Player* player;
+	double duration;
+	char c = 0;
+
+	init(&eCols, &eRows, &enemy);
+
+	std::clock_t start = std::clock();
+	player = new Player(COLS / 2, LINES - 1, 100);
 
 	int directionVector = -1;
 
-	if (COLS % 2 == 0)
-		eCols = COLS * 3 / 43 - 1;
-	else
-		eCols = COLS * 3 / 43;
-
-	if ((LINES / 2) % 2 == 0)
-		eRows = LINES / 8 - 1;
-	else
-		eRows = LINES / 8;
-
-	for (int i = 0; i < eRows; ++i)
-	{
-		for (int j = 0; j < eCols; ++j)
-		{
-			enemy.addToWarriorPool(new Enemy(10 * (j + 1), 4 * (i + 1), 100));
-			if (j == 1)
-				enemy.warriorPool[i * eCols + j]->setLeftChap();
-			if (j == eCols)
-				enemy.warriorPool[i * eCols + j]->setRightChap();
-		}
-	}
 	int counter = 0;
 	while (player->isAlive())
 	{
 		if (!allAlive()) {
+			attron(COLOR_PAIR(1));
 			mvprintw(LINES / 2, COLS / 2 - 10, "YOU WON [press ENTER]");
+			attroff(COLOR_PAIR(1));
 			c = 0;
 			while (c != '\n')
 				c = getch();
@@ -223,10 +262,14 @@ int		main(void)
 		movePlayerMove(*player);
 		refresh();
 		duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+		attron(COLOR_PAIR(1));
 		mvprintw(0, COLS - 10, "%f", duration);
+		attroff(COLOR_PAIR(1));
 		counter++;
 	}
+	attron(COLOR_PAIR(4));
 	mvprintw(LINES / 2, COLS / 2 - 10, "GAME END [press ENTER]");
+	attroff(COLOR_PAIR(4));
 	c = 0;
 	while (c != '\n')
 		c = getch();

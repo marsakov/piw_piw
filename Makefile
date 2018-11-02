@@ -15,8 +15,8 @@ NAME	:=	piw_piw_v0.9
 CC		:= clang++
 CFLAGS	:= -Wall -Werror -Wextra
 
-DEPS	:= Player.hpp Enemy.hpp Bullet.hpp GameEntity.hpp Coordinate.hpp
-SRCS	:= Bullet.cpp Coordinate.cpp Enemy.cpp Player.cpp GameEntity.cpp main.cpp
+DEPS	:= Player.hpp Enemy.hpp Bullet.hpp GameEntity.hpp
+SRCS	:= Bullet.cpp Enemy.cpp Player.cpp GameEntity.cpp main.cpp
 OBJS	:= $(SRCS:%.cpp=%.o)
 
 all: $(NAME)

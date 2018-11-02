@@ -45,7 +45,7 @@ void Enemy::clear(void) const
 
 void Enemy::shoot(void) {
 	char c;
-	Bullet* b = new Bullet(_x, _y + 1, _damage, 1);
+	Bullet* b = new Bullet(_x, _y + 1, _damage, 1, 'v');
 
 	if (!b->addToBulletPool())
 	{
@@ -61,7 +61,9 @@ void Enemy::shoot(void) {
 
 void Enemy::drawEntity()
 {
+	attron(COLOR_PAIR(2));
 	mvprintw(_y, _x, "[o.o]\n");
+	attroff(COLOR_PAIR(2));
 }
 
 int		Enemy::isRightChap(void) const {

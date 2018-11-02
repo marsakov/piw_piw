@@ -34,7 +34,7 @@ void Player::move(int x, int y) {
 }
 
 void Player::shoot(void) {
-	Bullet* b = new Bullet(_x, _y - 1, _damage, 0);
+	Bullet* b = new Bullet(_x, _y - 1, _damage, 0, '^');
 
 	if (!b->addToBulletPool())
 	{
@@ -44,7 +44,9 @@ void Player::shoot(void) {
 }
 
 void	Player::drawEntity(void) {
+	attron(COLOR_PAIR(3));
 	mvprintw(_y, _x, "}*.*{");
+	attroff(COLOR_PAIR(3));
 }
 
 void	Player::clear(void) const

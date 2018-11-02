@@ -12,10 +12,12 @@
 
 #include "Bullet.hpp"
 
-Bullet::Bullet(int x, int y, int damage, int pVSe) {
+Bullet::Bullet(int x, int y, int damage, int pVSe, char c) {
 	setPos(x, y);
 	_damage = damage;
 	_pVSe = pVSe;
+	_c[0] = c;
+	_c[1] = 0;
 }
 
 Bullet::Bullet(Bullet const & bullet)
@@ -28,7 +30,13 @@ Bullet::~Bullet() {
 }
 
 void Bullet::drawEntity() {
-	mvprintw(getY(), getX(), "*");
+	if (_c[0] == '^')
+		attron(COLOR_PAIR(3));
+	else
+		attron(COLOR_PAIR(2));
+	mvprintw(_y, _x, _c);
+	attroff(COLOR_PAIR(2));
+	attroff(COLOR_PAIR(3));
 }
 
 int		Bullet::getDamage()
@@ -61,11 +69,6 @@ int		Bullet::addToBulletPool()
 		return (0);
 	return (1);
 }
-
-// void	Bullet::move(Coordinate &cord)
-// {
-// 	_pos = cord;
-// }
 
 Bullet & Bullet::operator=(Bullet const &bullet) {
 	if (this != &bullet)

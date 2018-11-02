@@ -20,7 +20,7 @@ class Bullet : public GameEntity
 
 public:
 
-	Bullet(int x, int y, int damage, int pVSe);
+	Bullet(int x, int y, int damage, int pVSe, char c);
 	Bullet(Bullet const & bullet);
 	~Bullet();
 
@@ -35,8 +35,9 @@ public:
 	static Bullet				*bulletPool[];
 	
 private:
-	int _damage;
-	int _pVSe;
+	int		_damage;
+	int		_pVSe;
+	char	_c[2];
 
 };
 

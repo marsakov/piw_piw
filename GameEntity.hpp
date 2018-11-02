@@ -16,7 +16,6 @@
 #include <ncurses.h>
 #include <ctime>
 #include <iostream>
-#include "Coordinate.hpp"
 
 class GameEntity
 {
