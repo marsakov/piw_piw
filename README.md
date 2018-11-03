@@ -41,3 +41,8 @@ Entities of your game are each represented by a character on the screen.
 	./piw_piw
 
 #### Our future depends on you!
+
+![Image alt](https://github.com/marsakov/piw_piw/raw/master/img/start.png)
+![Image alt](https://github.com/marsakov/piw_piw/raw/master/img/end.png)
+![Image alt](https://github.com/marsakov/piw_piw/raw/master/img/game.png)
+![Image alt](https://github.com/marsakov/piw_piw/raw/master/img/win.png)
