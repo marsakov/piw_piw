@@ -15,8 +15,6 @@ You will use a screen made up of a grid of 'squares'.
 These can be equated to the characters on your terminal.
 Entities of your game are each represented by a character on the screen.
 
-Our future depends on you!
-
 *Controls:*
 
 * Arrows movement.
@@ -34,3 +32,12 @@ Our future depends on you!
 * Clock-based timing using whatever system facilty or library you like
 * Entities that can occupy multiple squares
 * Enemies can also shoot
+
+### Run:
+
+	git clone https://github.com/marsakov/piw_piw.git
+	cd piw_piw
+	make
+	./piw_piw
+
+#### Our future depends on you!
