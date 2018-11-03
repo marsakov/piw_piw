@@ -9,7 +9,7 @@
 The goal of this project is to implement a simplistic shoot-em-up
 style game in your terminal.
 
-###Requirements:
+### Requirements:
 
 You will use a screen made up of a grid of 'squares'.
 These can be equated to the characters on your terminal.
